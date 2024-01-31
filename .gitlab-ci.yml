@@ -1,0 +1,74 @@
+stages:
+  - install
+  - build
+  - test
+
+cache:
+  paths:
+    - node_modules/
+    - ~/.pnpm/
+
+before_script:
+  - npm install -g pnpm
+  - export PATH=~/.pnpm/bin:$PATH
+
+install:
+  stage: install
+  image: node:20.10.0
+  tags:
+    - gitlab-org
+  script:
+    - pnpm install
+  artifacts:
+    name: '${CI_BUILD_REF}'
+    expire_in: 20 mins
+    paths:
+      - node_modules
+  only:
+    refs:
+      - merge_requests
+
+build:
+  stage: build
+  image: node:20.10.0
+  artifacts:
+    name: '${CI_BUILD_REF}'
+    expire_in: 20 mins
+    paths:
+      - .next
+  tags:
+    - gitlab-org
+  script:
+    - pnpm build
+  only:
+    refs:
+      - merge_requests
+
+
+unit_test:
+  stage: test
+  image: node:20.10.0
+  artifacts:
+    name: '${CI_BUILD_REF}'
+    expire_in: 20 mins
+  tags:
+    - gitlab-org
+  script:
+    - pnpm test:cov
+  only:
+    refs:
+      - merge_requests
+
+e2e_test:
+  stage: test
+  image: node:20.10.0
+  artifacts:
+    name: '${CI_BUILD_REF}'
+    expire_in: 20 mins
+  tags:
+    - gitlab-org
+  script:
+    - pnpm test:e2e
+  only:
+    refs:
+      - merge_requests
