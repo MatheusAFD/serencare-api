@@ -62,9 +62,6 @@ unit_test:
 e2e_test:
   stage: test
   image: node:20.10.0
-  artifacts:
-    name: '${CI_BUILD_REF}'
-    expire_in: 20 mins
   tags:
     - gitlab-org
   script:
