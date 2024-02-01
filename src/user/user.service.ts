@@ -9,4 +9,8 @@
     });
 
     return newUser;
+  async findAll() {
+    const users = await this.prisma.user.findMany();
+
+    return users;
   }
