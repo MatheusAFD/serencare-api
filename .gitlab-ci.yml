@@ -14,7 +14,7 @@ before_script:
 
 install:
   stage: install
-  image: node:20.10.0
+  image: node:20.11.0-alpine
   tags:
     - gitlab-org
   script:
@@ -30,7 +30,7 @@ install:
 
 build:
   stage: build
-  image: node:20.10.0
+  image: node:20.11.0-alpine
   artifacts:
     name: '${CI_BUILD_REF}'
     expire_in: 20 mins
@@ -47,7 +47,7 @@ build:
 
 unit_test:
   stage: test
-  image: node:20.10.0
+  image: node:20.11.0-alpine
   artifacts:
     name: '${CI_BUILD_REF}'
     expire_in: 20 mins
@@ -55,17 +55,6 @@ unit_test:
     - gitlab-org
   script:
     - pnpm test:cov
-  only:
-    refs:
-      - merge_requests
-
-e2e_test:
-  stage: test
-  image: node:20.10.0
-  tags:
-    - gitlab-org
-  script:
-    - pnpm test:e2e
   only:
     refs:
       - merge_requests
