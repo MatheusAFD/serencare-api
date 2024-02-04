@@ -18,8 +18,7 @@ install:
   tags:
     - gitlab-org
   script:
-    - apt-get update -y && apt-get install -y openssl && \
-    npm install -g prisma && npm install --global pnpm
+    - apt-get update -y && apt-get install -y openssl && npm install -g prisma && npm install --global pnpm
   artifacts:
     name: '${CI_BUILD_REF}'
     expire_in: 20 mins
