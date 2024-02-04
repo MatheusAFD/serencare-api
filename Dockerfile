@@ -1,4 +1,4 @@
-FROM node:20.11.0-alpine AS development
+FROM node:20-slim AS development
 
 WORKDIR /usr/src/app
 
@@ -7,12 +7,13 @@ ENV NODE_OPTIONS=--max_old_space_size=4096
 COPY package*.json ./
 COPY pnpm-lock.yaml ./
 
-RUN npm install -g pnpm
-
-RUN pnpm install
+RUN apt-get update -y && apt-get install -y openssl && \
+    npm install -g prisma && npm install --global pnpm
 
 COPY . .
 
-RUN npx prisma generate
+COPY tsconfig.json ./
 
-RUN pnpm build
+RUN  pnpm install --frozen-lockfile && pnpm build && pnpm prisma generate
+
+CMD ["pnpm", "start:dev"]
