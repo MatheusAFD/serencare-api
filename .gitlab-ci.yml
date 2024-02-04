@@ -18,7 +18,7 @@ install:
   tags:
     - gitlab-org
   script:
-    - pnpm install
+    - npm install -g prisma && npm install --global pnpm
   artifacts:
     name: '${CI_BUILD_REF}'
     expire_in: 20 mins
@@ -34,12 +34,10 @@ build:
   artifacts:
     name: '${CI_BUILD_REF}'
     expire_in: 20 mins
-    paths:
-      - .next
   tags:
     - gitlab-org
   script:
-    - pnpm build
+    - pnpm prisma generate && pnpm build
   only:
     refs:
       - merge_requests
