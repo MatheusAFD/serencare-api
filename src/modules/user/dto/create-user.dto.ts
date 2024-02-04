@@ -1,8 +1,6 @@
-import { BaseDTO } from 'src/modules/base.dto'
-
 import { IsEmail, IsString, MinLength } from 'class-validator'
 
-export class CreateUserDTO extends BaseDTO {
+export class CreateUserDTO {
   @IsEmail()
   email: string
 

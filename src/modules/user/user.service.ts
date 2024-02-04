@@ -27,6 +27,9 @@ export class UserService {
         email: createUserDto.email,
         name: createUserDto.name,
         password: createUserDto.password
+      },
+      select: {
+        id: true
       }
     })
 
