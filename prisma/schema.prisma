@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,12 +8,118 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(cuid())
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now()) @updatedAt
+  id         String     @id @default(cuid())
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now()) @updatedAt
   deleted_at DateTime?
+  name       String
+  email      String     @unique
+  password   String
+  companyId  String
+  roleId     String?
+  company    Company    @relation(fields: [companyId], references: [id])
+  role       Role?      @relation(fields: [roleId], references: [id])
+  users      UserRole[]
+}
 
-  name     String
-  email    String @unique
-  password String
+model Role {
+  id         String     @id @default(cuid())
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now()) @updatedAt
+  deleted_at DateTime?
+  type       RoleType
+  users      User[]
+  userRole   UserRole[]
+}
+
+model UserRole {
+  userId String
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([userId, roleId])
+}
+
+model Unit {
+  id         String     @id @default(cuid())
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now()) @updatedAt
+  deleted_at DateTime?
+  city       String
+  state      String
+  zipcode    String
+  number     String
+  status     StatusType
+  companyId  String
+  room       Room[]
+  company    Company    @relation(fields: [companyId], references: [id])
+}
+
+model Room {
+  id         String     @id @default(cuid())
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now()) @updatedAt
+  deleted_at DateTime?
+  name       String
+  floor      String
+  status     StatusType
+  unitId     String
+  unit       Unit       @relation(fields: [unitId], references: [id])
+}
+
+model Company {
+  id                  String            @id @default(cuid())
+  created_at          DateTime          @default(now())
+  updated_at          DateTime          @default(now()) @updatedAt
+  deleted_at          DateTime?
+  name                String
+  cnpj                String?
+  cpf                 String?
+  isActive            Boolean
+  activeCompanyPlanId String
+  planId              String?
+  activeCompanyPlan   ActiveCompanyPlan @relation(fields: [activeCompanyPlanId], references: [id])
+  plan                Plan?             @relation(fields: [planId], references: [id])
+  Unit                Unit[]
+  users               User[]
+}
+
+model Plan {
+  id                String              @id @default(cuid())
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @default(now()) @updatedAt
+  deleted_at        DateTime?
+  name              String
+  duration          Int
+  amount            Float
+  isFree            Boolean
+  isTrial           Boolean
+  activeCompanyPlan ActiveCompanyPlan[]
+  companies         Company[]
+}
+
+model ActiveCompanyPlan {
+  id                          String    @id @default(cuid())
+  created_at                  DateTime  @default(now())
+  updated_at                  DateTime  @default(now()) @updatedAt
+  deleted_at                  DateTime?
+  startDate                   DateTime
+  endDate                     DateTime
+  isActive                    Boolean
+  remainingDaysWithActivePlan Int
+  planId                      String
+  plan                        Plan      @relation(fields: [planId], references: [id])
+  company                     Company[]
+}
+
+enum RoleType {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum StatusType {
+  active
+  inactive
 }

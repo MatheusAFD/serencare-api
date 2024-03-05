@@ -10,4 +10,10 @@ export class CreateUserDTO {
 
   @IsString()
   password: string
+
+  @IsString()
+  companyId: string
+
+  @IsString()
+  roleId: string
 }

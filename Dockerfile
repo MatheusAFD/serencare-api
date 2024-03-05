@@ -14,6 +14,6 @@ COPY . .
 
 COPY tsconfig.json ./
 
-RUN  pnpm install --frozen-lockfile && pnpm build && pnpm prisma generate
+RUN  pnpm install && pnpm prisma generate
 
 CMD ["pnpm", "start:dev"]

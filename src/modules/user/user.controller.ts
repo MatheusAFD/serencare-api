@@ -5,45 +5,42 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
-  UseGuards
+  Delete
 } from '@nestjs/common'
 
-import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 import { CreateUserDTO } from './dto/create-user.dto'
 import { UpdateUserDTO } from './dto/update-user.dto'
 import { UserService } from './user.service'
+
+import { Public } from '@commom/decorators/auth/public-route'
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post('/create')
+  @Public()
+  @Post()
   create(@Body() createUserDto: CreateUserDTO) {
     return this.userService.create(createUserDto)
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   async findAll() {
     return this.userService.findAll()
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: string) {
     return this.userService.findOne(id)
   }
 
-  @Patch('/update/:id')
-  @UseGuards(JwtAuthGuard)
+  @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDTO) {
     return await this.userService.update(id, updateUserDto)
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
-    return this.userService.remove(+id)
+    return this.userService.remove(id)
   }
 }
