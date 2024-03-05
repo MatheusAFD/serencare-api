@@ -37,7 +37,7 @@ build:
   tags:
     - gitlab-org
   script:
-    - pnpm prisma generate && pnpm build
+    - pnpm dlx prisma generate && pnpm build
   only:
     refs:
       - merge_requests

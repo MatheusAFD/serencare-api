@@ -14,30 +14,21 @@ export const roundsOfHashing = 10
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createUserDto: CreateUserDTO) {
-    const hashedPassword = await bcrypt.hash(
-      createUserDto.password,
-      roundsOfHashing
-    )
-
-    createUserDto.password = hashedPassword
-
-    const newUser = await this.prisma.user.create({
-      data: {
-        email: createUserDto.email,
-        name: createUserDto.name,
-        password: createUserDto.password
-      },
-      select: {
-        id: true
+  async findAll(): Promise<User[]> {
+    const users = await this.prisma.user.findMany({
+      include: {
+        company: {
+          select: {
+            name: true
+          }
+        },
+        role: {
+          select: {
+            type: true
+          }
+        }
       }
     })
-
-    return newUser
-  }
-
-  async findAll(): Promise<User[]> {
-    const users = await this.prisma.user.findMany()
 
     return users.map((user) => new User(user))
   }
@@ -54,30 +45,55 @@ export class UserService {
     return new User(user)
   }
 
-  async update(id: string, updateUserDto: UpdateUserDTO) {
-    const userToUpdate = await this.prisma.user.findUnique({
-      where: { id: id }
+  async create(createUserDto: CreateUserDTO) {
+    const hashedPassword = await bcrypt.hash(
+      createUserDto.password,
+      roundsOfHashing
+    )
+
+    createUserDto.password = hashedPassword
+
+    const newUser = await this.prisma.user.create({
+      data: {
+        email: createUserDto.email,
+        name: createUserDto.name,
+        password: createUserDto.password,
+        role: {
+          connect: {
+            id: createUserDto.roleId
+          }
+        },
+        company: {
+          connect: {
+            id: createUserDto.companyId
+          }
+        }
+      },
+      select: {
+        id: true
+      }
     })
 
-    if (!userToUpdate) {
-      throw new NotFoundException(`User not found!`)
-    }
+    return newUser
+  }
 
-    const updatedUser = {
-      name: updateUserDto.name ?? userToUpdate.name,
-      email: updateUserDto.email ?? userToUpdate.email
-    }
-
+  async update(id: string, updateUserDTO: UpdateUserDTO) {
     return this.prisma.user.update({
       where: { id },
-      data: updatedUser,
+      data: updateUserDTO,
       select: {
         id: true
       }
     })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`
+  async remove(id: string) {
+    await this.prisma.user.update({
+      where: { id },
+      data: { deleted_at: new Date() },
+      select: {
+        id: true
+      }
+    })
   }
 }

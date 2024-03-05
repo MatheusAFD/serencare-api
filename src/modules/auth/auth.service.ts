@@ -14,8 +14,17 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async login(email: string, password: string): Promise<AuthEntity> {
-    const user = await this.prisma.user.findUnique({ where: { email } })
+  async signin(email: string, password: string): Promise<AuthEntity> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      include: {
+        role: {
+          select: {
+            type: true
+          }
+        }
+      }
+    })
 
     if (!user) {
       throw new NotFoundException('Invalid credentials')
@@ -28,7 +37,7 @@ export class AuthService {
     }
 
     return {
-      accessToken: this.jwtService.sign({ userId: user.id })
+      accessToken: this.jwtService.sign({ id: user.id, role: user.role })
     }
   }
 }

@@ -1,7 +1,6 @@
 import { BaseDTO } from 'src/modules/base.dto'
 
 import { Exclude } from 'class-transformer'
-
 export class User extends BaseDTO {
   name: string
   email: string
