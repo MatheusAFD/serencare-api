@@ -22,8 +22,8 @@ export class CompanyService {
     })
   }
 
-  findAll() {
-    const companies = this.prisma.company.findMany()
+  async findAll() {
+    const companies = await this.prisma.company.findMany()
 
     return companies
   }
