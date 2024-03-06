@@ -4,7 +4,7 @@ import { PrismaService } from 'prisma/prisma.service'
 
 import { CreateUserDTO } from './dto/create-user.dto'
 import { UpdateUserDTO } from './dto/update-user.dto'
-import { User } from './entities/user.entity'
+import { UserEntity } from './entities/user.entity'
 
 import * as bcrypt from 'bcrypt'
 
@@ -14,7 +14,7 @@ export const roundsOfHashing = 10
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<UserEntity[]> {
     const users = await this.prisma.user.findMany({
       include: {
         company: {
@@ -30,10 +30,10 @@ export class UserService {
       }
     })
 
-    return users.map((user) => new User(user))
+    return users.map((user) => new UserEntity(user))
   }
 
-  async findOne(id: string): Promise<User> {
+  async findOne(id: string): Promise<UserEntity> {
     const user = await this.prisma.user.findUnique({
       where: { id }
     })
@@ -42,7 +42,7 @@ export class UserService {
       throw new NotFoundException(`User not found!`)
     }
 
-    return new User(user)
+    return new UserEntity(user)
   }
 
   async create(createUserDto: CreateUserDTO) {

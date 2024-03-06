@@ -10,13 +10,19 @@ import {
 
 import { CreateUserDTO } from './dto/create-user.dto'
 import { UpdateUserDTO } from './dto/update-user.dto'
+import { UserEntity } from './entities/user.entity'
+import { GetMeUseCase } from './use-cases/get-me-usecase'
 import { UserService } from './user.service'
 
 import { Public } from '@commom/decorators/auth/public-route'
+import { CurrentUser } from '@commom/decorators/user/current-user.decorator'
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly getMeUseCase: GetMeUseCase
+  ) {}
 
   @Public()
   @Post()
@@ -32,6 +38,11 @@ export class UserController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.userService.findOne(id)
+  }
+
+  @Get('get-me')
+  async getCurrentUser(@CurrentUser() user: UserEntity) {
+    return this.getMeUseCase.execute(user.id)
   }
 
   @Patch(':id')
