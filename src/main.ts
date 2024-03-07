@@ -16,25 +16,27 @@ async function bootstrap() {
     new FastifyAdapter()
   )
 
-  const config = new DocumentBuilder()
-    .setTitle('SerenCare Example')
-    .setDescription('The SerenCare API description')
-    .setVersion('1.0')
-    .addTag('SerenCare')
-    .addBearerAuth(
-      {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-        name: 'JWT',
-        description: 'Enter JWT token',
-        in: 'header'
-      },
-      'JWT-auth'
-    )
-    .build()
-  const document = SwaggerModule.createDocument(app, config)
-  SwaggerModule.setup('api/swagger', app, document)
+  if (process.env.NODE_ENV !== 'production') {
+    const config = new DocumentBuilder()
+      .setTitle('SerenCare Example')
+      .setDescription('The SerenCare API description')
+      .setVersion('1.0')
+      .addTag('SerenCare')
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          name: 'JWT',
+          description: 'Enter JWT token',
+          in: 'header'
+        },
+        'JWT-auth'
+      )
+      .build()
+    const document = SwaggerModule.createDocument(app, config)
+    SwaggerModule.setup('api/swagger', app, document)
+  }
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)))
 
