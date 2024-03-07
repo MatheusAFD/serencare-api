@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common'
 
 import { PrismaService } from 'prisma/prisma.service'
 
-import { CreateRoomDto } from './dto/create-room.dto'
-import { UpdateRoomDto } from './dto/update-room.dto'
+import { CreateRoomDTO } from './dto/create-room.dto'
+import { UpdateRoomDTO } from './dto/update-room.dto'
 
 @Injectable()
 export class RoomService {
   constructor(private prisma: PrismaService) {}
-  async create(createRoomDto: CreateRoomDto) {
+  async create(createRoomDto: CreateRoomDTO) {
     return await this.prisma.room.create({
       data: {
         ...createRoomDto,
@@ -33,7 +33,7 @@ export class RoomService {
     })
   }
 
-  async update(id: string, updateRoomDto: UpdateRoomDto) {
+  async update(id: string, updateRoomDto: UpdateRoomDTO) {
     return await this.prisma.room.update({
       data: updateRoomDto,
       where: {

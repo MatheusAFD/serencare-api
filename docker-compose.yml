@@ -2,7 +2,6 @@ version: '3.7'
 
 services:
   api:
-    restart: always
     image: node:20.11.0-alpine
     container_name: serencare-api
     build:
