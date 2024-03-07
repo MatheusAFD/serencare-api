@@ -3,14 +3,14 @@ import { Plan } from '@prisma/client'
 
 import { PrismaService } from 'prisma/prisma.service'
 
-import { CreatePlanDto } from './dto/create-plan.dto'
-import { UpdatePlanDto } from './dto/update-plan.dto'
+import { CreatePlanDTO } from './dto/create-plan.dto'
+import { UpdatePlanDTO } from './dto/update-plan.dto'
 
 @Injectable()
 export class PlanService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createPlanDto: CreatePlanDto): Promise<Plan> {
+  async create(createPlanDto: CreatePlanDTO): Promise<Plan> {
     return await this.prisma.plan.create({
       data: createPlanDto
     })
@@ -28,7 +28,7 @@ export class PlanService {
     })
   }
 
-  async update(id: string, updatePlanDto: UpdatePlanDto): Promise<Plan> {
+  async update(id: string, updatePlanDto: UpdatePlanDTO): Promise<Plan> {
     return await this.prisma.plan.update({
       data: updatePlanDto,
       where: {

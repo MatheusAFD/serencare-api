@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common'
 
 import { PrismaService } from 'prisma/prisma.service'
 
-import { CreateUnitDto } from './dto/create-unit.dto'
-import { UpdateUnitDto } from './dto/update-unit.dto'
+import { CreateUnitDTO } from './dto/create-unit.dto'
+import { UpdateUnitDTO } from './dto/update-unit.dto'
 
 @Injectable()
 export class UnitService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createUnitDto: CreateUnitDto) {
+  async create(createUnitDto: CreateUnitDTO) {
     return await this.prisma.unit.create({
       data: {
         city: createUnitDto.city,
@@ -38,7 +38,7 @@ export class UnitService {
     })
   }
 
-  async update(id: string, updateUnitDto: UpdateUnitDto) {
+  async update(id: string, updateUnitDto: UpdateUnitDTO) {
     return this.prisma.unit.update({
       data: {
         city: updateUnitDto.city,

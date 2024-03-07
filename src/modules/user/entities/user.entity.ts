@@ -7,6 +7,8 @@ export class UserEntity extends BaseDTO {
   @Exclude()
   password: string
 
+  companyId: string
+
   constructor(partial: Partial<User>) {
     super()
     Object.assign(this, partial)

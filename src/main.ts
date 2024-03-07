@@ -4,6 +4,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication
 } from '@nestjs/platform-fastify'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
 import { AppModule } from './app.module'
 
@@ -14,6 +15,26 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter()
   )
+
+  const config = new DocumentBuilder()
+    .setTitle('SerenCare Example')
+    .setDescription('The SerenCare API description')
+    .setVersion('1.0')
+    .addTag('SerenCare')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header'
+      },
+      'JWT-auth'
+    )
+    .build()
+  const document = SwaggerModule.createDocument(app, config)
+  SwaggerModule.setup('api/swagger', app, document)
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)))
 
