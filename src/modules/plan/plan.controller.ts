@@ -7,14 +7,20 @@ import {
   Param,
   Delete
 } from '@nestjs/common'
-import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiParam,
+  ApiResponse,
+  ApiTags
+} from '@nestjs/swagger'
+
+import { Roles } from '@common/decorators/auth/roles.decorator'
+import { Role } from '@common/enum/role.enum'
 
 import { CreatePlanDTO } from './dto/create-plan.dto'
 import { UpdatePlanDTO } from './dto/update-plan.dto'
 import { PlanService } from './plan.service'
-
-import { Roles } from '@commom/decorators/auth/roles.decorator'
-import { Role } from '@commom/enum/role.enum'
 
 @ApiTags('plan')
 @Controller('plan')
@@ -24,6 +30,9 @@ export class PlanController {
   @ApiBearerAuth('JWT-auth')
   @ApiParam({ name: 'id', description: 'ID from plan' })
   @ApiBody({ type: CreatePlanDTO })
+  @ApiResponse({ status: 404, description: 'Invalid credentials' })
+  @ApiResponse({ status: 401, description: 'Insufficient permissions' })
+  @ApiResponse({ status: 201, description: 'Created' })
   @Roles(Role.SuperAdmin)
   @Post()
   create(@Body() createPlanDto: CreatePlanDTO) {
@@ -31,6 +40,9 @@ export class PlanController {
   }
 
   @ApiBearerAuth('JWT-auth')
+  @ApiResponse({ status: 404, description: 'Invalid credentials' })
+  @ApiResponse({ status: 401, description: 'Insufficient permissions' })
+  @ApiResponse({ status: 200, description: 'OK' })
   @Roles(Role.SuperAdmin)
   @Get()
   findAll() {
@@ -39,6 +51,9 @@ export class PlanController {
 
   @ApiBearerAuth('JWT-auth')
   @ApiParam({ name: 'id', description: 'ID from plan' })
+  @ApiResponse({ status: 404, description: 'Invalid credentials' })
+  @ApiResponse({ status: 401, description: 'Insufficient permissions' })
+  @ApiResponse({ status: 200, description: 'OK' })
   @Roles(Role.SuperAdmin)
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -48,7 +63,10 @@ export class PlanController {
   @ApiBearerAuth('JWT-auth')
   @ApiParam({ name: 'id', description: 'ID from plan' })
   @ApiBody({ type: UpdatePlanDTO })
-  @Roles(Role.SuperAdmin)
+  @ApiResponse({ status: 404, description: 'Invalid credentials' })
+  @ApiResponse({ status: 401, description: 'Insufficient permissions' })
+  @ApiResponse({ status: 200, description: 'OK' })
+  @Roles(Role.Admin, Role.SuperAdmin)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePlanDto: UpdatePlanDTO) {
     return this.planService.update(id, updatePlanDto)
@@ -56,6 +74,9 @@ export class PlanController {
 
   @ApiBearerAuth('JWT-auth')
   @ApiParam({ name: 'id', description: 'ID from plan' })
+  @ApiResponse({ status: 404, description: 'Invalid credentials' })
+  @ApiResponse({ status: 401, description: 'Insufficient permissions' })
+  @ApiResponse({ status: 200, description: 'OK' })
   @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {

@@ -2,13 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 
 import { PrismaService } from 'prisma/prisma.service'
 
+import { encryptData } from '@common/utils/encrypt-data'
+
 import { CreateUserDTO } from './dto/create-user.dto'
 import { UpdateUserDTO } from './dto/update-user.dto'
 import { UserEntity } from './entities/user.entity'
-
-import * as bcrypt from 'bcrypt'
-
-export const roundsOfHashing = 10
 
 @Injectable()
 export class UserService {
@@ -46,10 +44,7 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDTO) {
-    const hashedPassword = await bcrypt.hash(
-      createUserDto.password,
-      roundsOfHashing
-    )
+    const hashedPassword = await encryptData(createUserDto.password)
 
     createUserDto.password = hashedPassword
 
