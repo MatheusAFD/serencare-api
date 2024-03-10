@@ -27,7 +27,7 @@ model Role {
   created_at DateTime   @default(now())
   updated_at DateTime   @default(now()) @updatedAt
   deleted_at DateTime?
-  type       RoleType
+  type       RoleType   @unique
   users      User[]
   userRole   UserRole[]
 }
@@ -50,8 +50,8 @@ model Unit {
   state      String
   zipcode    String
   number     String
-  status     StatusType
   companyId  String
+  status     StatusType
   room       Room[]
   company    Company    @relation(fields: [companyId], references: [id])
 }
@@ -63,26 +63,24 @@ model Room {
   deleted_at DateTime?
   name       String
   floor      String
-  status     StatusType
   unitId     String
+  status     StatusType
   unit       Unit       @relation(fields: [unitId], references: [id])
 }
 
 model Company {
-  id                  String            @id @default(cuid())
-  created_at          DateTime          @default(now())
-  updated_at          DateTime          @default(now()) @updatedAt
-  deleted_at          DateTime?
-  name                String
-  cnpj                String?
-  cpf                 String?
-  isActive            Boolean
-  activeCompanyPlanId String
-  planId              String?
-  activeCompanyPlan   ActiveCompanyPlan @relation(fields: [activeCompanyPlanId], references: [id])
-  plan                Plan?             @relation(fields: [planId], references: [id])
-  Unit                Unit[]
-  users               User[]
+  id         String    @id @default(cuid())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+  deleted_at DateTime?
+  name       String
+  cnpj       String?
+  cpf        String?
+  isActive   Boolean
+  unit       Unit[]
+  users      User[]
+
+  activeCompanyPlan ActiveCompanyPlan?
 }
 
 model Plan {
@@ -90,13 +88,12 @@ model Plan {
   created_at        DateTime            @default(now())
   updated_at        DateTime            @default(now()) @updatedAt
   deleted_at        DateTime?
-  name              String
   duration          Int
+  isTrial           Boolean
   amount            Float
   isFree            Boolean
-  isTrial           Boolean
+  name              String
   activeCompanyPlan ActiveCompanyPlan[]
-  companies         Company[]
 }
 
 model ActiveCompanyPlan {
@@ -109,8 +106,11 @@ model ActiveCompanyPlan {
   isActive                    Boolean
   remainingDaysWithActivePlan Int
   planId                      String
-  plan                        Plan      @relation(fields: [planId], references: [id])
-  company                     Company[]
+
+  plan Plan @relation(fields: [planId], references: [id])
+
+  companyId String  @unique
+  company   Company @relation(fields: [companyId], references: [id])
 }
 
 enum RoleType {

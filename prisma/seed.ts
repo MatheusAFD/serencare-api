@@ -1,20 +1,19 @@
 import { PrismaService } from './prisma.service'
 
-import { roundsOfHashing } from 'src/modules/user/user.service'
+import { encryptData } from '@common/utils/encrypt-data'
 
-import * as bcrypt from 'bcrypt'
 import { addMonths } from 'date-fns'
 
 const prisma = new PrismaService()
 
 async function main() {
-  const hashedPassword = await bcrypt.hash('123123123', roundsOfHashing)
+  const hashedPassword = await encryptData('123123123')
 
   await prisma.role.createMany({
     data: [{ type: 'USER' }, { type: 'ADMIN' }, { type: 'SUPER_ADMIN' }]
   })
 
-  const SUPER_ADMIN_CREATED_ROLE = await prisma.role.findFirst({
+  const SUPER_ADMIN_ROLE = await prisma.role.findUniqueOrThrow({
     where: {
       type: 'SUPER_ADMIN'
     }
@@ -41,7 +40,7 @@ async function main() {
           email: 'email@trial.com',
           name: 'user-super-admin',
           password: hashedPassword,
-          roleId: SUPER_ADMIN_CREATED_ROLE.id
+          roleId: SUPER_ADMIN_ROLE.id
         }
       },
       activeCompanyPlan: {
@@ -64,7 +63,7 @@ async function main() {
     data: {
       role: {
         connect: {
-          id: SUPER_ADMIN_CREATED_ROLE.id
+          id: SUPER_ADMIN_ROLE.id
         }
       },
       user: {
