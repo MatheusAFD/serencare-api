@@ -1,12 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
-import {
-  IsBoolean,
-  IsInt,
-  IsOptional,
-  IsString,
-  MinLength
-} from 'class-validator'
+import { IsBoolean, IsOptional, IsString, MinLength } from 'class-validator'
 
 export class CreateCompanyDTO {
   @ApiProperty()
@@ -22,6 +16,7 @@ export class CreateCompanyDTO {
   cnpj: string
 
   @ApiProperty()
+  @IsOptional()
   @IsBoolean()
   isActive: boolean
 
@@ -32,12 +27,4 @@ export class CreateCompanyDTO {
   @IsOptional()
   @MinLength(11)
   cpf: string
-
-  @ApiProperty()
-  @IsInt()
-  remainingDaysWithActivePlan: number
-
-  @ApiProperty()
-  @IsString()
-  activePlanId: string
 }

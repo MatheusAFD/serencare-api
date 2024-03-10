@@ -10,8 +10,8 @@ import * as bcrypt from 'bcrypt'
 @Injectable()
 export class AuthService {
   constructor(
-    private prisma: PrismaService,
-    private jwtService: JwtService
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService
   ) {}
 
   async signin(email: string, password: string): Promise<AuthEntity> {
