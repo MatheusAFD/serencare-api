@@ -28,6 +28,7 @@ module.exports = {
         "groups": [
           ["/^@nestjs/", '/^@prisma/'],
           "/prisma/",
+          "/^@common/",
           "/modules/",
           ["parent", "sibling", "index"]
         ],
