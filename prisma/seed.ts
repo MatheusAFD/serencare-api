@@ -22,7 +22,7 @@ async function main() {
   const plan = await prisma.plan.create({
     data: {
       amount: 0,
-      duration: 30,
+      duration: 0,
       isFree: true,
       isTrial: true,
       name: 'Trial'
@@ -54,21 +54,6 @@ async function main() {
               id: plan.id
             }
           }
-        }
-      }
-    }
-  })
-
-  await prisma.userRole.create({
-    data: {
-      role: {
-        connect: {
-          id: SUPER_ADMIN_ROLE.id
-        }
-      },
-      user: {
-        connect: {
-          email: 'email@trial.com'
         }
       }
     }

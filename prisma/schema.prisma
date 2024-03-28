@@ -8,37 +8,46 @@ datasource db {
 }
 
 model User {
-  id         String     @id @default(cuid())
-  created_at DateTime   @default(now())
-  updated_at DateTime   @default(now()) @updatedAt
+  id         String    @id @default(cuid())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
   deleted_at DateTime?
-  name       String
-  email      String     @unique
-  password   String
-  companyId  String
-  roleId     String?
-  company    Company    @relation(fields: [companyId], references: [id])
-  role       Role?      @relation(fields: [roleId], references: [id])
-  users      UserRole[]
+
+  name     String
+  email    String     @unique
+  password String
+  genre    GenreType?
+  birthday DateTime?
+
+  companyId String
+  roleId    String
+  company   Company @relation(fields: [companyId], references: [id])
+  role      Role    @relation(fields: [roleId], references: [id])
+
+  employee Employee?
+}
+
+model Employee {
+  id         String    @id @default(cuid())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+  deleted_at DateTime?
+
+  name   String
+  status StatusType
+  color  String
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 model Role {
-  id         String     @id @default(cuid())
-  created_at DateTime   @default(now())
-  updated_at DateTime   @default(now()) @updatedAt
+  id         String    @id @default(cuid())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
   deleted_at DateTime?
-  type       RoleType   @unique
+  type       RoleType  @unique
   users      User[]
-  userRole   UserRole[]
-}
-
-model UserRole {
-  userId String
-  roleId String
-  role   Role   @relation(fields: [roleId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
-
-  @@id([userId, roleId])
 }
 
 model Unit {
@@ -46,12 +55,13 @@ model Unit {
   created_at DateTime   @default(now())
   updated_at DateTime   @default(now()) @updatedAt
   deleted_at DateTime?
+  name       String
   city       String
   state      String
   zipcode    String
   number     String
-  companyId  String
   status     StatusType
+  companyId  String
   room       Room[]
   company    Company    @relation(fields: [companyId], references: [id])
 }
@@ -63,8 +73,8 @@ model Room {
   deleted_at DateTime?
   name       String
   floor      String
-  unitId     String
   status     StatusType
+  unitId     String
   unit       Unit       @relation(fields: [unitId], references: [id])
 }
 
@@ -88,11 +98,11 @@ model Plan {
   created_at        DateTime            @default(now())
   updated_at        DateTime            @default(now()) @updatedAt
   deleted_at        DateTime?
+  name              String
   duration          Int
-  isTrial           Boolean
   amount            Float
   isFree            Boolean
-  name              String
+  isTrial           Boolean
   activeCompanyPlan ActiveCompanyPlan[]
 }
 
@@ -106,11 +116,9 @@ model ActiveCompanyPlan {
   isActive                    Boolean
   remainingDaysWithActivePlan Int
   planId                      String
-
-  plan Plan @relation(fields: [planId], references: [id])
-
-  companyId String  @unique
-  company   Company @relation(fields: [companyId], references: [id])
+  companyId                   String    @unique
+  plan                        Plan      @relation(fields: [planId], references: [id])
+  company                     Company   @relation(fields: [companyId], references: [id])
 }
 
 enum RoleType {
@@ -122,4 +130,10 @@ enum RoleType {
 enum StatusType {
   active
   inactive
+}
+
+enum GenreType {
+  male
+  female
+  other
 }
