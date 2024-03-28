@@ -6,7 +6,7 @@ import { PrismaService } from 'prisma/prisma.service'
 export class ActiveCompanyPlanService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findMeActiveCompanyPlan(companyId: string) {
+  async findActiveCompanyPlanByFromCompany(companyId: string) {
     return await this.prisma.activeCompanyPlan.findUnique({
       where: {
         companyId
