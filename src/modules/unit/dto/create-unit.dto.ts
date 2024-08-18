@@ -6,6 +6,10 @@ import { IsEnum, IsString, MinLength } from 'class-validator'
 export class CreateUnitDTO {
   @ApiProperty()
   @IsString()
+  name: string
+
+  @ApiProperty()
+  @IsString()
   city: string
 
   @ApiProperty()

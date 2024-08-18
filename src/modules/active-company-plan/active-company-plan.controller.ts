@@ -28,6 +28,8 @@ export class ActiveCompanyPlanController {
   @Roles(Role.User, Role.Admin)
   @Get()
   findMeActiveCompanyPlan(@CurrentUser() user: UserEntity) {
-    return this.activeCompanyPlanService.findMeActiveCompanyPlan(user.companyId)
+    return this.activeCompanyPlanService.findActiveCompanyPlanByFromCompany(
+      user.companyId
+    )
   }
 }

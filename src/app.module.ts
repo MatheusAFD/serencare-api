@@ -15,6 +15,7 @@ import { UserModule } from './modules/user/user.module'
 
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
+import { EmployeeModule } from './modules/employee/employee.module';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { AppService } from './app.service'
     RoomModule,
     CompanyModule,
     PlanModule,
-    ActiveCompanyPlanModule
+    ActiveCompanyPlanModule,
+    EmployeeModule
   ],
   controllers: [AppController],
   providers: [

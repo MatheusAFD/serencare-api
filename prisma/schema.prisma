@@ -16,29 +16,35 @@ model User {
   email      String     @unique
   password   String
   companyId  String
-  roleId     String?
+  roleId     String
+  birthday   DateTime?
+  genre      GenreType?
+  employee   Employee?
   company    Company    @relation(fields: [companyId], references: [id])
-  role       Role?      @relation(fields: [roleId], references: [id])
-  users      UserRole[]
+  role       Role       @relation(fields: [roleId], references: [id])
 }
 
-model Role {
+model Employee {
   id         String     @id @default(cuid())
   created_at DateTime   @default(now())
   updated_at DateTime   @default(now()) @updatedAt
   deleted_at DateTime?
-  type       RoleType   @unique
-  users      User[]
-  userRole   UserRole[]
+  name       String
+  status     StatusType
+  color      String
+  userId     String     @unique
+  companyId  String
+  company    Company    @relation(fields: [companyId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
 }
 
-model UserRole {
-  userId String
-  roleId String
-  role   Role   @relation(fields: [roleId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
-
-  @@id([userId, roleId])
+model Role {
+  id         String    @id @default(cuid())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+  deleted_at DateTime?
+  type       RoleType  @unique
+  users      User[]
 }
 
 model Unit {
@@ -52,6 +58,7 @@ model Unit {
   number     String
   companyId  String
   status     StatusType
+  name       String
   room       Room[]
   company    Company    @relation(fields: [companyId], references: [id])
 }
@@ -69,18 +76,18 @@ model Room {
 }
 
 model Company {
-  id         String    @id @default(cuid())
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now()) @updatedAt
-  deleted_at DateTime?
-  name       String
-  cnpj       String?
-  cpf        String?
-  isActive   Boolean
-  unit       Unit[]
-  users      User[]
-
+  id                String             @id @default(cuid())
+  created_at        DateTime           @default(now())
+  updated_at        DateTime           @default(now()) @updatedAt
+  deleted_at        DateTime?
+  name              String
+  cnpj              String?
+  cpf               String?
+  isActive          Boolean
   activeCompanyPlan ActiveCompanyPlan?
+  unit              Unit[]
+  users             User[]
+  Employee          Employee[]
 }
 
 model Plan {
@@ -106,11 +113,9 @@ model ActiveCompanyPlan {
   isActive                    Boolean
   remainingDaysWithActivePlan Int
   planId                      String
-
-  plan Plan @relation(fields: [planId], references: [id])
-
-  companyId String  @unique
-  company   Company @relation(fields: [companyId], references: [id])
+  companyId                   String    @unique
+  company                     Company   @relation(fields: [companyId], references: [id])
+  plan                        Plan      @relation(fields: [planId], references: [id])
 }
 
 enum RoleType {
@@ -122,4 +127,10 @@ enum RoleType {
 enum StatusType {
   active
   inactive
+}
+
+enum GenreType {
+  male
+  female
+  other
 }
