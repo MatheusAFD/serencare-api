@@ -8,37 +8,34 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(cuid())
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now()) @updatedAt
+  id         String     @id @default(cuid())
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now()) @updatedAt
   deleted_at DateTime?
-
-  name     String
-  email    String     @unique
-  password String
-  genre    GenreType?
-  birthday DateTime?
-
-  companyId String
-  roleId    String
-  company   Company @relation(fields: [companyId], references: [id])
-  role      Role    @relation(fields: [roleId], references: [id])
-
-  employee Employee?
+  name       String
+  email      String     @unique
+  password   String
+  companyId  String
+  roleId     String
+  birthday   DateTime?
+  genre      GenreType?
+  employee   Employee?
+  company    Company    @relation(fields: [companyId], references: [id])
+  role       Role       @relation(fields: [roleId], references: [id])
 }
 
 model Employee {
-  id         String    @id @default(cuid())
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now()) @updatedAt
+  id         String     @id @default(cuid())
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now()) @updatedAt
   deleted_at DateTime?
-
-  name   String
-  status StatusType
-  color  String
-
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
+  name       String
+  status     StatusType
+  color      String
+  userId     String     @unique
+  companyId  String
+  company    Company    @relation(fields: [companyId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
 }
 
 model Role {
@@ -55,13 +52,13 @@ model Unit {
   created_at DateTime   @default(now())
   updated_at DateTime   @default(now()) @updatedAt
   deleted_at DateTime?
-  name       String
   city       String
   state      String
   zipcode    String
   number     String
-  status     StatusType
   companyId  String
+  status     StatusType
+  name       String
   room       Room[]
   company    Company    @relation(fields: [companyId], references: [id])
 }
@@ -73,24 +70,24 @@ model Room {
   deleted_at DateTime?
   name       String
   floor      String
-  status     StatusType
   unitId     String
+  status     StatusType
   unit       Unit       @relation(fields: [unitId], references: [id])
 }
 
 model Company {
-  id         String    @id @default(cuid())
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now()) @updatedAt
-  deleted_at DateTime?
-  name       String
-  cnpj       String?
-  cpf        String?
-  isActive   Boolean
-  unit       Unit[]
-  users      User[]
-
+  id                String             @id @default(cuid())
+  created_at        DateTime           @default(now())
+  updated_at        DateTime           @default(now()) @updatedAt
+  deleted_at        DateTime?
+  name              String
+  cnpj              String?
+  cpf               String?
+  isActive          Boolean
   activeCompanyPlan ActiveCompanyPlan?
+  unit              Unit[]
+  users             User[]
+  Employee          Employee[]
 }
 
 model Plan {
@@ -98,11 +95,11 @@ model Plan {
   created_at        DateTime            @default(now())
   updated_at        DateTime            @default(now()) @updatedAt
   deleted_at        DateTime?
-  name              String
   duration          Int
+  isTrial           Boolean
   amount            Float
   isFree            Boolean
-  isTrial           Boolean
+  name              String
   activeCompanyPlan ActiveCompanyPlan[]
 }
 
@@ -117,8 +114,8 @@ model ActiveCompanyPlan {
   remainingDaysWithActivePlan Int
   planId                      String
   companyId                   String    @unique
-  plan                        Plan      @relation(fields: [planId], references: [id])
   company                     Company   @relation(fields: [companyId], references: [id])
+  plan                        Plan      @relation(fields: [planId], references: [id])
 }
 
 enum RoleType {

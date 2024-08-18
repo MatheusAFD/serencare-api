@@ -12,6 +12,7 @@ export class UnitService {
   async create(createUnitDto: CreateUnitDTO) {
     return await this.prisma.unit.create({
       data: {
+        name: createUnitDto.name,
         city: createUnitDto.city,
         number: createUnitDto.number,
         state: createUnitDto.state,
