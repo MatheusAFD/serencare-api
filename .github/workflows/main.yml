@@ -60,6 +60,9 @@ jobs:
         with:
           node-version: 20.11.0
 
+      - name: Install PNPM
+        run: npm install -g pnpm
+
       - name: Build Project
         run: pnpm build
 
@@ -75,6 +78,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20.11.0
+
+      - name: Install PNPM
+        run: npm install -g pnpm
 
       - name: Run Tests
         run: pnpm test:cov
