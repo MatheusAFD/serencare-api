@@ -1,0 +1,109 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  install:
+    name: Install Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.11.0
+
+      - name: Install PNPM
+        run: npm install -g pnpm
+
+      - name: Cache pnpm and node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm/store/v3
+            node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+            ${{ runner.os }}-pnpm
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: List the state of node modules
+        if: ${{ steps.cache-pnpm.outputs.cache-hit != 'true' }}
+        continue-on-error: true
+        run: pnpm list
+
+      - name: Generate Prisma Client
+        run: pnpm dlx prisma generate
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.11.0
+
+      - name: Install PNPM
+        run: npm install -g pnpm
+
+      - name: Cache pnpm and node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm/store/v3
+            node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+            ${{ runner.os }}-pnpm
+
+      - name: Build Project
+        run: pnpm build
+
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.11.0
+
+      - name: Install PNPM
+        run: npm install -g pnpm
+
+      - name: Cache pnpm and node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm/store/v3
+            node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+            ${{ runner.os }}-pnpm
+
+      - name: Run Tests
+        run: pnpm test:cov
