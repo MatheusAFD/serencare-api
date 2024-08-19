@@ -45,7 +45,8 @@ export class CreateEmployeeAndUserUseCase {
                 id: companyId
               }
             },
-            role: {
+
+            roles: {
               connect: {
                 id: userRole.id
               }

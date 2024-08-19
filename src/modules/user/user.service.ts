@@ -20,7 +20,7 @@ export class UserService {
             name: true
           }
         },
-        role: {
+        roles: {
           select: {
             type: true
           }
@@ -53,7 +53,8 @@ export class UserService {
         email: createUserDto.email,
         name: createUserDto.name,
         password: createUserDto.password,
-        role: {
+
+        roles: {
           connect: {
             id: createUserDto.roleId
           }

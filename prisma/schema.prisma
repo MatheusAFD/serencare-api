@@ -16,12 +16,11 @@ model User {
   email      String     @unique
   password   String
   companyId  String
-  roleId     String
   birthday   DateTime?
   genre      GenreType?
   employee   Employee?
   company    Company    @relation(fields: [companyId], references: [id])
-  role       Role       @relation(fields: [roleId], references: [id])
+  roles      Role[]     @relation("UserRoles")
 }
 
 model Employee {
@@ -44,7 +43,7 @@ model Role {
   updated_at DateTime  @default(now()) @updatedAt
   deleted_at DateTime?
   type       RoleType  @unique
-  users      User[]
+  users      User[]    @relation("UserRoles")
 }
 
 model Unit {
@@ -76,18 +75,19 @@ model Room {
 }
 
 model Company {
-  id                String             @id @default(cuid())
-  created_at        DateTime           @default(now())
-  updated_at        DateTime           @default(now()) @updatedAt
-  deleted_at        DateTime?
-  name              String
-  cnpj              String?
-  cpf               String?
-  isActive          Boolean
-  activeCompanyPlan ActiveCompanyPlan?
-  unit              Unit[]
-  users             User[]
-  Employee          Employee[]
+  id                  String             @id @default(cuid())
+  created_at          DateTime           @default(now())
+  updated_at          DateTime           @default(now()) @updatedAt
+  deleted_at          DateTime?
+  name                String
+  cnpj                String?
+  cpf                 String?
+  isActive            Boolean
+  activeCompanyPlanId String?
+  activeCompanyPlan   ActiveCompanyPlan? @relation("CompanyToActivePlan")
+  unit                Unit[]
+  users               User[]
+  Employee            Employee[]
 }
 
 model Plan {
@@ -114,12 +114,14 @@ model ActiveCompanyPlan {
   remainingDaysWithActivePlan Int
   planId                      String
   companyId                   String    @unique
-  company                     Company   @relation(fields: [companyId], references: [id])
+  company                     Company   @relation("CompanyToActivePlan", fields: [companyId], references: [id])
   plan                        Plan      @relation(fields: [planId], references: [id])
 }
 
 enum RoleType {
   USER
+  SCHEDULE
+  FINANCIAL
   ADMIN
   SUPER_ADMIN
 }

@@ -25,7 +25,7 @@ export class ActiveCompanyPlanController {
   @ApiResponse({ status: 404, description: 'Invalid credentials' })
   @ApiResponse({ status: 401, description: 'Insufficient permissions' })
   @ApiResponse({ status: 200, description: 'OK' })
-  @Roles(Role.User, Role.Admin)
+  @Roles(Role.User, Role.Admin, Role.SuperAdmin)
   @Get()
   findMeActiveCompanyPlan(@CurrentUser() user: UserEntity) {
     return this.activeCompanyPlanService.findActiveCompanyPlanByFromCompany(
