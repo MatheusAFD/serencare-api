@@ -21,7 +21,7 @@ model User {
   genre      GenreType?
   employee   Employee?
   company    Company    @relation(fields: [companyId], references: [id])
-  role       Role       @relation(fields: [roleId], references: [id])
+  roles      Role[]     @relation("UserRoles")
 }
 
 model Employee {
@@ -120,6 +120,8 @@ model ActiveCompanyPlan {
 
 enum RoleType {
   USER
+  SCHEDULE
+  FINANCIAL
   ADMIN
   SUPER_ADMIN
 }

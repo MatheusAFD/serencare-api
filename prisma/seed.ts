@@ -10,13 +10,13 @@ async function main() {
   const hashedPassword = await encryptData('123123123')
 
   await prisma.role.createMany({
-    data: [{ type: 'USER' }, { type: 'ADMIN' }, { type: 'SUPER_ADMIN' }]
-  })
-
-  const SUPER_ADMIN_ROLE = await prisma.role.findUniqueOrThrow({
-    where: {
-      type: 'SUPER_ADMIN'
-    }
+    data: [
+      { type: 'USER' },
+      { type: 'FINANCIAL' },
+      { type: 'SCHEDULE' },
+      { type: 'ADMIN' },
+      { type: 'SUPER_ADMIN' }
+    ]
   })
 
   const plan = await prisma.plan.create({
@@ -40,7 +40,9 @@ async function main() {
           email: 'email@trial.com',
           name: 'user-super-admin',
           password: hashedPassword,
-          roleId: SUPER_ADMIN_ROLE.id
+          roles: {
+            connect: [{ type: 'SUPER_ADMIN' }]
+          }
         }
       },
       activeCompanyPlan: {

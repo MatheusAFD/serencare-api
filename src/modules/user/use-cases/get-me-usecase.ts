@@ -14,7 +14,7 @@ export class GetMeUseCase {
         id: userId
       },
       include: {
-        role: {
+        roles: {
           select: {
             type: true
           }

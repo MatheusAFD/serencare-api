@@ -37,9 +37,9 @@ export class RolesGuard extends AuthGuard('jwt') {
       return true
     }
 
-    const hasRequiredRole = requiredRoles.some(
-      (role) => user?.role?.type === role
-    )
+    const hasRequiredRole = requiredRoles.some((requiredRole) => {
+      return user.role.some((userRole) => userRole.type === requiredRole)
+    })
 
     if (!hasRequiredRole) {
       throw new UnauthorizedException('Insufficient permissions')
