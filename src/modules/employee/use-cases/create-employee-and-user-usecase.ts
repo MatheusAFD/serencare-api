@@ -51,6 +51,11 @@ export class CreateEmployeeAndUserUseCase {
               }
             }
           }
+        },
+        company: {
+          connect: {
+            id: companyId
+          }
         }
       }
     })
