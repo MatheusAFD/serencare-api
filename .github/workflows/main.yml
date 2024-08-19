@@ -60,16 +60,6 @@ jobs:
         with:
           node-version: 20.11.0
 
-      - name: Cache pnpm and node_modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.pnpm/store/v3
-            node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
-
       - name: Build Project
         run: pnpm build
 
@@ -85,16 +75,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20.11.0
-
-      - name: Cache pnpm and node_modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.pnpm/store/v3
-            node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
 
       - name: Run Tests
         run: pnpm test:cov
