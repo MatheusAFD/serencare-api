@@ -46,7 +46,7 @@ jobs:
         run: pnpm list
 
       - name: Generate Prisma Client
-        run: pnpm dlx prisma migrate dev && prisma generate
+        run: pnpm dlx prisma generate
 
   build:
     name: Build
