@@ -23,18 +23,19 @@ jobs:
         with:
           node-version: 20.11.0
 
+      - name: Install PNPM
+        run: npm install -g pnpm
+
       - name: Cache pnpm and node_modules
         uses: actions/cache@v3
         with:
           path: |
             ~/.pnpm/store/v3
             node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-
-
-      - name: Install PNPM
-        run: npm install -g pnpm
+            ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+            ${{ runner.os }}-pnpm
 
       - name: Install Dependencies
         run: pnpm install
@@ -63,6 +64,17 @@ jobs:
       - name: Install PNPM
         run: npm install -g pnpm
 
+      - name: Cache pnpm and node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm/store/v3
+            node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+            ${{ runner.os }}-pnpm
+
       - name: Build Project
         run: pnpm build
 
@@ -81,6 +93,17 @@ jobs:
 
       - name: Install PNPM
         run: npm install -g pnpm
+
+      - name: Cache pnpm and node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm/store/v3
+            node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+            ${{ runner.os }}-pnpm
 
       - name: Run Tests
         run: pnpm test:cov
