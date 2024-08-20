@@ -6,9 +6,16 @@ import { PrismaService } from 'prisma/prisma.service'
 
 import { ActiveCompanyPlanController } from './active-company-plan.controller'
 import { ActiveCompanyPlanService } from './active-company-plan.service'
+import { ConnectActiveCompanyPlanToCompanyUseCase } from './use-cases'
 
 @Module({
   controllers: [ActiveCompanyPlanController],
-  providers: [ActiveCompanyPlanService, PrismaService, JwtService, Reflector]
+  providers: [
+    ActiveCompanyPlanService,
+    PrismaService,
+    JwtService,
+    Reflector,
+    ConnectActiveCompanyPlanToCompanyUseCase
+  ]
 })
 export class ActiveCompanyPlanModule {}

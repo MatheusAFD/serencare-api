@@ -75,19 +75,18 @@ model Room {
 }
 
 model Company {
-  id                  String             @id @default(cuid())
-  created_at          DateTime           @default(now())
-  updated_at          DateTime           @default(now()) @updatedAt
-  deleted_at          DateTime?
-  name                String
-  cnpj                String?
-  cpf                 String?
-  isActive            Boolean
-  activeCompanyPlanId String?
-  activeCompanyPlan   ActiveCompanyPlan? @relation("CompanyToActivePlan")
-  unit                Unit[]
-  users               User[]
-  Employee            Employee[]
+  id                String             @id @default(cuid())
+  created_at        DateTime           @default(now())
+  updated_at        DateTime           @default(now()) @updatedAt
+  deleted_at        DateTime?
+  name              String
+  cnpj              String?
+  cpf               String?
+  isActive          Boolean
+  activeCompanyPlan ActiveCompanyPlan? @relation("CompanyToActivePlan")
+  unit              Unit[]
+  users             User[]
+  Employee          Employee[]
 }
 
 model Plan {

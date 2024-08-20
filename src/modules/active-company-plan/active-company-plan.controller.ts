@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common'
+import { Body, Controller, Get, Post } from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -12,12 +12,15 @@ import { Role } from '@common/enum/role.enum'
 
 import { UserEntity } from '../user/entities/user.entity'
 import { ActiveCompanyPlanService } from './active-company-plan.service'
+import { ConnectActiveCompanyPlanToCompanyUseCaseDTO } from './dto'
+import { ConnectActiveCompanyPlanToCompanyUseCase } from './use-cases'
 
 @ApiTags('active-company-plan')
 @Controller('active-company-plan')
 export class ActiveCompanyPlanController {
   constructor(
-    private readonly activeCompanyPlanService: ActiveCompanyPlanService
+    private readonly activeCompanyPlanService: ActiveCompanyPlanService,
+    private readonly connectActiveCompanyPlanToCompanyUseCase: ConnectActiveCompanyPlanToCompanyUseCase
   ) {}
 
   @ApiBearerAuth('JWT-auth')
@@ -31,5 +34,13 @@ export class ActiveCompanyPlanController {
     return this.activeCompanyPlanService.findActiveCompanyPlanByFromCompany(
       user.companyId
     )
+  }
+
+  @Roles(Role.User, Role.Admin, Role.SuperAdmin)
+  @Post('/connect-plan')
+  connectActiveCompanyPlan(
+    @Body() body: ConnectActiveCompanyPlanToCompanyUseCaseDTO
+  ) {
+    return this.connectActiveCompanyPlanToCompanyUseCase.execute(body)
   }
 }
