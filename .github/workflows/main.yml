@@ -39,9 +39,7 @@ jobs:
             ~/.pnpm/store/v3
             node_modules
           key: ${{ runner.os }}-pnpm-${{ github.run_id }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-${{ github.run_id }}-${{ hashFiles('pnpm-lock.yaml') }}
-            ${{ runner.os }}-pnpm
+          restore-keys: ${{ runner.os }}-pnpm-${{ github.run_id }}
 
       - name: List the state of node modules
         if: ${{ steps.cache-pnpm.outputs.cache-hit != 'true' }}
@@ -70,10 +68,8 @@ jobs:
           path: |
             ~/.pnpm/store/v3
             node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-            ${{ runner.os }}-pnpm
+          key: ${{ runner.os }}-pnpm-${{ github.run_id }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: ${{ runner.os }}-pnpm-${{ github.run_id }}
 
       - name: Build Project
         run: pnpm build
