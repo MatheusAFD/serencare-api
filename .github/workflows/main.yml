@@ -29,6 +29,9 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
+      - name: Generate Prisma Client
+        run: pnpm dlx prisma generate
+
       - name: Cache pnpm and node_modules
         uses: actions/cache@v3
         with:
@@ -44,9 +47,6 @@ jobs:
         if: ${{ steps.cache-pnpm.outputs.cache-hit != 'true' }}
         continue-on-error: true
         run: pnpm list
-
-      - name: Generate Prisma Client
-        run: pnpm dlx prisma generate
 
   build:
     name: Build
