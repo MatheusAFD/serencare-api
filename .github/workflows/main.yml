@@ -29,24 +29,22 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
+      - name: Generate Prisma Client
+        run: pnpm prisma generate
+
       - name: Cache pnpm and node_modules
         uses: actions/cache@v3
         with:
           path: |
             ~/.pnpm/store/v3
             node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-            ${{ runner.os }}-pnpm
+          key: ${{ runner.os }}-pnpm-${{ github.run_id }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: ${{ runner.os }}-pnpm-${{ github.run_id }}
 
       - name: List the state of node modules
         if: ${{ steps.cache-pnpm.outputs.cache-hit != 'true' }}
         continue-on-error: true
         run: pnpm list
-
-      - name: Generate Prisma Client
-        run: pnpm dlx prisma generate
 
   build:
     name: Build
@@ -70,10 +68,8 @@ jobs:
           path: |
             ~/.pnpm/store/v3
             node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-            ${{ runner.os }}-pnpm
+          key: ${{ runner.os }}-pnpm-${{ github.run_id }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: ${{ runner.os }}-pnpm-${{ github.run_id }}
 
       - name: Build Project
         run: pnpm build
