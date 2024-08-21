@@ -38,9 +38,9 @@ jobs:
           path: |
             ~/.pnpm/store/v3
             node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('package-lock.json') }}
+          key: ${{ runner.os }}-pnpm-${{ github.run_id }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+            ${{ runner.os }}-pnpm-${{ github.run_id }}-${{ hashFiles('pnpm-lock.yaml') }}
             ${{ runner.os }}-pnpm
 
       - name: List the state of node modules
