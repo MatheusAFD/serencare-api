@@ -30,7 +30,7 @@ jobs:
         run: pnpm install
 
       - name: Generate Prisma Client
-        run: pnpm dlx prisma generate
+        run: pnpm prisma generate
 
       - name: Cache pnpm and node_modules
         uses: actions/cache@v3
